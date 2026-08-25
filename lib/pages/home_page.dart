@@ -16,6 +16,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int _currentIndex = 0;
+  String _selectedCategory = 'Semua';
   final PageController _pageController = PageController();
 
   void _goToTab(int index) {
@@ -32,6 +33,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color(0xFFF5F6F8),
       body: PageView(
         controller: _pageController,
         onPageChanged: (index) {
@@ -67,13 +69,75 @@ class _HomePageState extends State<HomePage> {
 
   Widget _buildHomeContent() {
     return ListView(
+      padding: EdgeInsets.zero,
       children: [
         HomeAppBar(
           onCartTap: () => _goToTab(1),
           onChatTap: () => Navigator.pushNamed(context, '/chats'),
         ),
-        const CategoriesWidget(),
-        const Items(),
+        Container(
+          color: Colors.white,
+          padding: const EdgeInsets.symmetric(vertical: 10),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16),
+                child: Text(
+                  'Kategori',
+                  style: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFF0D9488),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 8),
+              CategoriesWidget(
+                selected: _selectedCategory,
+                onTap: (category) =>
+                    setState(() => _selectedCategory = category),
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 8),
+        const FlashSaleRow(),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                _selectedCategory == 'Semua'
+                    ? 'Rekomendasi Untukmu'
+                    : _selectedCategory,
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF0F766E),
+                ),
+              ),
+              GestureDetector(
+                onTap: () => Navigator.pushNamed(context, '/search'),
+                child: const Row(
+                  children: [
+                    Text(
+                      'Lihat Semua',
+                      style: TextStyle(
+                        fontSize: 13,
+                        color: Color(0xFF0D9488),
+                      ),
+                    ),
+                    Icon(Icons.chevron_right,
+                        size: 18, color: Color(0xFF0D9488)),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+        Items(category: _selectedCategory),
       ],
     );
   }

@@ -1,69 +1,85 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import '../providers/product_provider.dart';
 
 class CategoriesWidget extends StatelessWidget {
-  const CategoriesWidget({super.key});
+  const CategoriesWidget({super.key, this.selected = 'Semua', this.onTap});
 
-  // Daftar aset gambar kategori (lokal, sementara pakai gambar jam).
-  static const List<String> _categoryImages = [
-    'images/categories/forerunner-165-aqua-cf-lg.webp',
-    'images/categories/fenix-7-pro-sapphire-carbongray-cf-lg.webp',
-    'images/categories/forerunner-165-aqua-cf-lg.webp',
-    'images/categories/fenix-7-pro-sapphire-carbongray-cf-lg.webp',
-  ];
+  final String selected;
+  final ValueChanged<String>? onTap;
+
+  static const Map<String, IconData> _icons = {
+    'Semua': Icons.grid_view_rounded,
+    'Elektronik': Icons.devices,
+    'Fashion': Icons.checkroom,
+    'Makanan': Icons.fastfood,
+    'Skincare': Icons.spa,
+    'Olahraga': Icons.sports_tennis,
+  };
 
   @override
   Widget build(BuildContext context) {
-    // List kategori produk
-    final List<String> categories = [
-      'Outfit',
-      'Makanan',
-      'Skincare',
-      'Elektronik',
-    ];
+    final categories = context.watch<ProductCatalog>().categoriesWithStock;
 
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: Row(
-        children: [
-          for (int i = 0; i < categories.length; i++)
-            Container(
-              margin: const EdgeInsets.symmetric(horizontal: 10),
-              padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
+    return SizedBox(
+      height: 100,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        padding: const EdgeInsets.symmetric(horizontal: 12),
+        itemCount: categories.length,
+        itemBuilder: (context, i) {
+          final isActive = categories[i] == selected;
+          return GestureDetector(
+            onTap: () => onTap?.call(categories[i]),
+            child: Container(
+              width: 72,
+              margin: const EdgeInsets.only(right: 8),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Image.asset(
-                    _categoryImages[i],
-                    width: 40,
-                    height: 40,
-                    fit: BoxFit.cover,
-                    errorBuilder: (context, error, stackTrace) => const SizedBox(
-                      width: 40,
-                      height: 40,
-                      child: Icon(
-                        Icons.category,
-                        size: 28,
-                        color: Color(0xFF0D9488),
-                      ),
+                  Container(
+                    width: 56,
+                    height: 56,
+                    decoration: BoxDecoration(
+                      color: isActive
+                          ? const Color(0xFF0D9488)
+                          : Colors.white,
+                      shape: BoxShape.circle,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withValues(alpha: 0.2),
+                          spreadRadius: 1,
+                          blurRadius: 4,
+                        ),
+                      ],
+                    ),
+                    child: Icon(
+                      _icons[categories[i]] ?? Icons.category,
+                      color:
+                          isActive ? Colors.white : const Color(0xFF0D9488),
+                      size: 26,
                     ),
                   ),
-                  const SizedBox(width: 8),
+                  const SizedBox(height: 6),
                   Text(
                     categories[i],
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 17,
-                      color: Color(0xFF0D9488),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontWeight:
+                          isActive ? FontWeight.bold : FontWeight.normal,
+                      color: isActive
+                          ? const Color(0xFF0D9488)
+                          : Colors.grey.shade700,
                     ),
                   ),
                 ],
               ),
             ),
-        ],
+          );
+        },
       ),
     );
   }
