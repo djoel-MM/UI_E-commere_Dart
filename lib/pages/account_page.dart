@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import '../providers/auth_provider.dart';
 
 class AccountPage extends StatelessWidget {
   const AccountPage({super.key});
 
-  Widget _buildProfileSection() {
+  Widget _buildProfileSection(BuildContext context) {
+    final auth = context.watch<Auth>();
     return Container(
       decoration: const BoxDecoration(
         gradient: LinearGradient(
@@ -13,36 +17,91 @@ class AccountPage extends StatelessWidget {
         ),
         borderRadius: BorderRadius.all(Radius.circular(15)),
       ),
-      padding: const EdgeInsets.symmetric(vertical: 40, horizontal: 16),
+      padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 16),
       child: Row(
         children: [
           ClipOval(
             child: Image.asset(
               'images/account/nain-repot.jpg',
-              width: 100,
-              height: 100,
+              width: 80,
+              height: 80,
               fit: BoxFit.cover,
+              errorBuilder: (_, __, ___) => Container(
+                width: 80,
+                height: 80,
+                color: Colors.white24,
+                child: const Icon(Icons.person, size: 40, color: Colors.white),
+              ),
             ),
           ),
-          const SizedBox(width: 20),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: const [
-              Text(
-                'Ade Setiawan',
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
+          const SizedBox(width: 16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  auth.name,
+                  style: const TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
                 ),
-              ),
-              SizedBox(height: 5),
-              Text(
-                'ade99setia@example.com',
-                style: TextStyle(color: Colors.white70),
-              ),
-            ],
+                const SizedBox(height: 4),
+                Text(
+                  auth.email,
+                  style: const TextStyle(color: Colors.white70),
+                ),
+              ],
+            ),
           ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildQuickActions(BuildContext context) {
+    Widget action(IconData icon, String label, VoidCallback onTap) {
+      return GestureDetector(
+        onTap: onTap,
+        child: Column(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: const Color(0xFF0D9488).withValues(alpha: 0.08),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(icon, color: const Color(0xFF0D9488), size: 24),
+            ),
+            const SizedBox(height: 6),
+            Text(
+              label,
+              style: const TextStyle(fontSize: 12, color: Color(0xFF0F766E)),
+            ),
+          ],
+        ),
+      );
+    }
+
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 14),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(15),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          action(Icons.receipt_long_outlined, 'Pesanan Saya',
+              () => Navigator.pushNamed(context, '/orders')),
+          action(Icons.favorite_outline, 'Wishlist',
+              () => Navigator.pushNamed(context, '/wishlist')),
+          action(Icons.discount_outlined, 'Voucher Saya',
+              () => ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Daftar voucher (demo)')))),
+          action(Icons.chat_bubble_outline, 'Chat',
+              () => Navigator.pushNamed(context, '/chats')),
         ],
       ),
     );
@@ -97,10 +156,7 @@ class AccountPage extends StatelessWidget {
             ElevatedButton(
               onPressed: () {
                 Navigator.of(context).pop();
-                // Menampilkan SnackBar Sesuai Tugas 2.3.3
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Logout Successful')),
-                );
+                context.read<Auth>().logout();
                 Navigator.pushReplacementNamed(context, '/login');
               },
               style: ElevatedButton.styleFrom(
@@ -214,8 +270,10 @@ class AccountPage extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
                 child: Column(
                   children: [
-                    _buildProfileSection(),
-                    const SizedBox(height: 30),
+                    _buildProfileSection(context),
+                    const SizedBox(height: 16),
+                    _buildQuickActions(context),
+                    const SizedBox(height: 20),
                     _buildSettingsSection(context),
                   ],
                 ),
