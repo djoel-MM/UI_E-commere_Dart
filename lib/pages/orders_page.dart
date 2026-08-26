@@ -19,6 +19,18 @@ class OrdersPage extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: const Color(0xFF0D9488),
         foregroundColor: Colors.white,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          tooltip: 'Kembali',
+          onPressed: () {
+            if (Navigator.canPop(context)) {
+              Navigator.pop(context);
+            } else {
+              Navigator.pushNamedAndRemoveUntil(
+                  context, '/', (route) => false);
+            }
+          },
+        ),
         title: const Text('Pesanan Saya'),
           bottom: TabBar(
             isScrollable: true,
