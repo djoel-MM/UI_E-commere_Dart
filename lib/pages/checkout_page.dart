@@ -39,53 +39,73 @@ class _CheckoutPageState extends State<CheckoutPage> {
         foregroundColor: Colors.white,
         title: const Text('Checkout'),
       ),
-      bottomNavigationBar: BottomAppBar(
-        child: Row(
-          children: [
-            Expanded(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    'Total Pembayaran',
-                    style: TextStyle(fontSize: 12, color: Colors.grey),
-                  ),
-                  Text(
-                    formatRupiah(total < 0 ? 0 : total),
-                    style: const TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: Color(0xFF0D9488),
+      bottomNavigationBar: SafeArea(
+        top: false,
+        child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withValues(alpha: 0.25),
+                spreadRadius: 1,
+                blurRadius: 6,
+                offset: const Offset(0, -1),
+              ),
+            ],
+          ),
+          child: Row(
+            children: [
+              Expanded(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Total Pembayaran',
+                      style: TextStyle(fontSize: 12, color: Colors.grey),
                     ),
-                  ),
-                ],
-              ),
-            ),
-            ElevatedButton(
-              onPressed: items.isEmpty
-                  ? null
-                  : () => Navigator.pushNamed(
-                        context,
-                        '/payment',
-                        arguments: {
-                          'courier': _courier,
-                          'shippingCost': _shippingCost,
-                          'voucher': _voucher,
-                        },
+                    FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Text(
+                        formatRupiah(total < 0 ? 0 : total),
+                        maxLines: 1,
+                        style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFF0D9488),
+                        ),
                       ),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFFF59E0B),
-                foregroundColor: Colors.white,
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 28, vertical: 14),
+                    ),
+                  ],
+                ),
               ),
-              child: const Text(
-                'Pilih Pembayaran',
-                style: TextStyle(fontWeight: FontWeight.bold),
+              const SizedBox(width: 12),
+              ElevatedButton(
+                onPressed: items.isEmpty
+                    ? null
+                    : () => Navigator.pushNamed(
+                          context,
+                          '/payment',
+                          arguments: {
+                            'courier': _courier,
+                            'shippingCost': _shippingCost,
+                            'voucher': _voucher,
+                          },
+                        ),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFFF59E0B),
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 20, vertical: 12),
+                ),
+                child: const Text(
+                  'Pilih Pembayaran',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
       body: ListView(

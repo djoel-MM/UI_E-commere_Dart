@@ -13,12 +13,25 @@ class CartBottomNavBar extends StatelessWidget {
     final subtotal = cart.subtotal;
     final hasSelection = cart.selectedItems.isNotEmpty;
 
-    return BottomAppBar(
-      height: 110,
+    return SafeArea(
+      top: false,
       child: Container(
+        height: 100,
         padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withValues(alpha: 0.25),
+              spreadRadius: 1,
+              blurRadius: 6,
+              offset: const Offset(0, -1),
+            ),
+          ],
+        ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisSize: MainAxisSize.min,
           children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -31,16 +44,23 @@ class CartBottomNavBar extends StatelessWidget {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                Text(
-                  formatRupiah(subtotal),
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 18,
-                    color: Color(0xFF0D9488),
+                Flexible(
+                  child: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Text(
+                      formatRupiah(subtotal),
+                      maxLines: 1,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18,
+                        color: Color(0xFF0D9488),
+                      ),
+                    ),
                   ),
                 ),
               ],
             ),
+            const SizedBox(height: 8),
             GestureDetector(
               onTap: hasSelection
                   ? () => Navigator.pushNamed(context, '/checkout')
@@ -56,7 +76,9 @@ class CartBottomNavBar extends StatelessWidget {
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Text(
-                  'Checkout (${cart.selectedQuantity})',
+                  hasSelection
+                      ? 'Checkout (${cart.selectedQuantity})'
+                      : 'Checkout',
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 15,
