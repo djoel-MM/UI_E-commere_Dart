@@ -159,7 +159,7 @@ class Items extends StatelessWidget {
         crossAxisCount: 2,
         mainAxisSpacing: 10,
         crossAxisSpacing: 10,
-        childAspectRatio: 0.62,
+        childAspectRatio: 0.60,
       ),
       itemBuilder: (context, i) => ProductCard(product: products[i]),
     );
@@ -217,18 +217,170 @@ class FlashSaleRow extends StatelessWidget {
           ),
           const SizedBox(height: 10),
           SizedBox(
-            height: 210,
+            height: 250,
             child: ListView.separated(
               scrollDirection: Axis.horizontal,
               itemCount: products.length,
               separatorBuilder: (_, __) => const SizedBox(width: 10),
-              itemBuilder: (context, i) => SizedBox(
-                width: 110,
-                child: ProductCard(product: products[i]),
+              itemBuilder: (context, i) => _FlashSaleItem(
+                key: ValueKey('flash-${products[i].id}'),
+                product: products[i],
               ),
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+/// Kartu ringkas khusus untuk carousel Flash Sale (lebar 110).
+/// Menggunakan layout padat agar tidak overflow pada tinggi tetap.
+class _FlashSaleItem extends StatelessWidget {
+  const _FlashSaleItem({super.key, required this.product});
+
+  final Product product;
+
+  @override
+  Widget build(BuildContext context) {
+    final wishlist = context.watch<Wishlist>();
+    final isWished = wishlist.contains(product.id);
+
+    return GestureDetector(
+      onTap: () => Navigator.pushNamed(context, '/product-detail',
+          arguments: product.id),
+      child: Container(
+        width: 110,
+        clipBehavior: Clip.antiAlias,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Stack(
+              children: [
+                Container(
+                  width: double.infinity,
+                  height: 110,
+                  color: Colors.white,
+                  child: Image.asset(
+                    product.image,
+                    fit: BoxFit.cover,
+                    errorBuilder: (_, __, ___) => const Icon(
+                      Icons.image_outlined,
+                      size: 40,
+                      color: Color(0xFF0D9488),
+                    ),
+                  ),
+                ),
+                if (product.discountPercent > 0)
+                  Positioned(
+                    top: 0,
+                    left: 0,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 6, vertical: 2),
+                      decoration: const BoxDecoration(
+                        color: Color(0xFFF59E0B),
+                        borderRadius: BorderRadius.only(
+                          bottomRight: Radius.circular(12),
+                        ),
+                      ),
+                      child: Text(
+                        '-${product.discountPercent}%',
+                        style: const TextStyle(
+                          fontSize: 10,
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+                Positioned(
+                  top: 4,
+                  right: 4,
+                  child: GestureDetector(
+                    onTap: () => wishlist.toggle(product.id),
+                    child: Container(
+                      padding: const EdgeInsets.all(3),
+                      decoration: const BoxDecoration(
+                        color: Colors.white70,
+                        shape: BoxShape.circle,
+                      ),
+                      child: Icon(
+                        isWished ? Icons.favorite : Icons.favorite_border,
+                        size: 13,
+                        color: isWished ? Colors.red : Colors.grey,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            Padding(
+              padding: const EdgeInsets.all(6),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    product.name,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      fontSize: 11,
+                      height: 1.3,
+                    ),
+                  ),
+                  const SizedBox(height: 3),
+                  Row(
+                    children: [
+                      const Icon(Icons.star,
+                          size: 11, color: Color(0xFFF59E0B)),
+                      const SizedBox(width: 2),
+                      Flexible(
+                        child: Text(
+                          '${product.rating}',
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            fontSize: 10,
+                            color: Colors.grey.shade600,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 3),
+                  Text(
+                    formatRupiah(product.price),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF0D9488),
+                    ),
+                  ),
+                  if (product.originalPrice != null)
+                    Text(
+                      formatRupiah(product.originalPrice!),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        fontSize: 10,
+                        height: 1.2,
+                        color: Colors.grey.shade500,
+                        decoration: TextDecoration.lineThrough,
+                      ),
+                    ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -53,7 +53,7 @@ class WishlistPage extends StatelessWidget {
                 crossAxisCount: 2,
                 mainAxisSpacing: 10,
                 crossAxisSpacing: 10,
-                childAspectRatio: 0.62,
+                childAspectRatio: 0.60,
               ),
               itemCount: products.length,
               itemBuilder: (context, i) =>
