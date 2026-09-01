@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../../models/product.dart';
 import '../../providers/product_provider.dart';
 import '../../utils/format.dart';
+import '../../utils/product_image.dart';
 import 'admin_product_form_page.dart';
 
 class AdminProductsPage extends StatefulWidget {
@@ -94,20 +95,13 @@ class _AdminProductsPageState extends State<AdminProductsPage> {
                             children: [
                               ClipRRect(
                                 borderRadius: BorderRadius.circular(8),
-                                child: Image.asset(
-                                  product.image,
-                                  width: 56,
-                                  height: 56,
-                                  fit: BoxFit.cover,
-                                  errorBuilder: (_, __, ___) => Container(
-                                    width: 56,
-                                    height: 56,
-                                    color: const Color(0xFF0D9488)
-                                        .withValues(alpha: 0.1),
-                                    child: const Icon(Icons.image,
-                                        color: Color(0xFF0D9488), size: 22),
-                                  ),
-                                ),
+                                 child: ProductImage(
+                                   src: product.image,
+                                   width: 56,
+                                   height: 56,
+                                   fit: BoxFit.cover,
+                                   errorIconSize: 22,
+                                 ),
                               ),
                               const SizedBox(width: 12),
                               Expanded(

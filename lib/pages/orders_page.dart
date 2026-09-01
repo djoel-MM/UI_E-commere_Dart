@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../models/order.dart';
 import '../providers/order_provider.dart';
 import '../utils/format.dart';
+import '../utils/product_image.dart';
 
 class OrdersPage extends StatelessWidget {
   const OrdersPage({super.key});
@@ -152,20 +153,13 @@ class _OrderList extends StatelessWidget {
                       children: [
                         ClipRRect(
                           borderRadius: BorderRadius.circular(8),
-                          child: Image.asset(
-                            item.image,
-                            width: 48,
-                            height: 48,
-                            fit: BoxFit.cover,
-                            errorBuilder: (_, __, ___) => Container(
-                              width: 48,
-                              height: 48,
-                              color: const Color(0xFF0D9488)
-                                  .withValues(alpha: 0.1),
-                              child: const Icon(Icons.image,
-                                  color: Color(0xFF0D9488), size: 20),
-                            ),
-                          ),
+                           child: ProductImage(
+                             src: item.image,
+                             width: 48,
+                             height: 48,
+                             fit: BoxFit.cover,
+                             errorIconSize: 20,
+                           ),
                         ),
                         const SizedBox(width: 10),
                         Expanded(

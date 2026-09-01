@@ -5,6 +5,7 @@ import '../providers/cart_provider.dart';
 import '../providers/product_provider.dart';
 import '../providers/wishlist_provider.dart';
 import '../utils/format.dart';
+import '../utils/product_image.dart';
 
 class ProductDetailPage extends StatefulWidget {
   const ProductDetailPage({super.key, required this.productId});
@@ -60,14 +61,10 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
         children: [
           AspectRatio(
             aspectRatio: 1,
-            child: Image.asset(
-              product.image,
+            child: ProductImage(
+              src: product.image,
               fit: BoxFit.cover,
-              errorBuilder: (_, __, ___) => Container(
-                color: const Color(0xFF0D9488).withValues(alpha: 0.08),
-                child: const Icon(Icons.image_outlined,
-                    size: 80, color: Color(0xFF0D9488)),
-              ),
+              errorIconSize: 80,
             ),
           ),
           Padding(

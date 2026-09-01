@@ -5,6 +5,7 @@ import '../data/dummy_data.dart';
 import '../models/voucher.dart';
 import '../providers/cart_provider.dart';
 import '../utils/format.dart';
+import '../utils/product_image.dart';
 
 class CheckoutPage extends StatefulWidget {
   const CheckoutPage({super.key});
@@ -199,19 +200,13 @@ class _CheckoutPageState extends State<CheckoutPage> {
                 children: [
                   ClipRRect(
                     borderRadius: BorderRadius.circular(8),
-                    child: Image.asset(
-                      item.product.image,
-                      width: 54,
-                      height: 54,
-                      fit: BoxFit.cover,
-                      errorBuilder: (_, __, ___) => Container(
-                        width: 54,
-                        height: 54,
-                        color: const Color(0xFF0D9488).withValues(alpha: 0.1),
-                        child: const Icon(Icons.image,
-                            color: Color(0xFF0D9488), size: 24),
-                      ),
-                    ),
+                     child: ProductImage(
+                       src: item.product.image,
+                       width: 54,
+                       height: 54,
+                       fit: BoxFit.cover,
+                       errorIconSize: 24,
+                     ),
                   ),
                   const SizedBox(width: 10),
                   Expanded(

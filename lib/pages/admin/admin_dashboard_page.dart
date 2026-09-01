@@ -5,6 +5,7 @@ import '../../models/order.dart';
 import '../../providers/order_provider.dart';
 import '../../providers/product_provider.dart';
 import '../../utils/format.dart';
+import '../../utils/product_image.dart';
 
 class AdminDashboardPage extends StatelessWidget {
   const AdminDashboardPage({super.key});
@@ -178,20 +179,13 @@ class AdminDashboardPage extends StatelessWidget {
                 children: [
                   ClipRRect(
                     borderRadius: BorderRadius.circular(8),
-                    child: Image.asset(
-                      product.image,
-                      width: 44,
-                      height: 44,
-                      fit: BoxFit.cover,
-                      errorBuilder: (_, __, ___) => Container(
-                        width: 44,
-                        height: 44,
-                        color:
-                            const Color(0xFF0D9488).withValues(alpha: 0.1),
-                        child: const Icon(Icons.image,
-                            color: Color(0xFF0D9488), size: 18),
-                      ),
-                    ),
+                     child: ProductImage(
+                       src: product.image,
+                       width: 44,
+                       height: 44,
+                       fit: BoxFit.cover,
+                       errorIconSize: 18,
+                     ),
                   ),
                   const SizedBox(width: 12),
                   Expanded(

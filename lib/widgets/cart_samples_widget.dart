@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../providers/cart_provider.dart';
 import '../utils/format.dart';
+import '../utils/product_image.dart';
 
 class CartSamples extends StatelessWidget {
   const CartSamples({super.key});
@@ -60,18 +61,12 @@ class CartSamples extends StatelessWidget {
                 const SizedBox(width: 10),
                 ClipRRect(
                   borderRadius: BorderRadius.circular(8),
-                  child: Image.asset(
-                    item.product.image,
+                  child: ProductImage(
+                    src: item.product.image,
                     width: 70,
                     height: 70,
                     fit: BoxFit.cover,
-                    errorBuilder: (_, __, ___) => Container(
-                      width: 70,
-                      height: 70,
-                      color: const Color(0xFF0D9488).withValues(alpha: 0.1),
-                      child: const Icon(Icons.image,
-                          color: Color(0xFF0D9488)),
-                    ),
+                    errorIconSize: 24,
                   ),
                 ),
                 Expanded(

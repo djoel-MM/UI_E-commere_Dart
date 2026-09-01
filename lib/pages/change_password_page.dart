@@ -14,6 +14,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
   final _confirmController = TextEditingController();
   bool _obscure = true;
 
+
   @override
   void dispose() {
     _currentController.dispose();

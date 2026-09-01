@@ -42,7 +42,7 @@ class _AdminProductFormPageState extends State<AdminProductFormPage> {
     _descController =
         TextEditingController(text: product?.description ?? '');
     _category = product?.category ?? categories.skip(1).first;
-    _image = product?.image ?? imgA;
+    _image = product?.image ?? categorySampleImages['Elektronik']!;
     _isFlashSale = product?.isFlashSale ?? false;
   }
 
@@ -173,10 +173,18 @@ class _AdminProductFormPageState extends State<AdminProductFormPage> {
             const SizedBox(height: 14),
             DropdownButtonFormField<String>(
               value: _image,
-              decoration: _input('Gambar (aset lokal)'),
-              items: const [
-                DropdownMenuItem(value: imgA, child: Text('Produk A')),
-                DropdownMenuItem(value: imgB, child: Text('Produk B')),
+              decoration: _input('Gambar (network)'),
+              items: [
+                if (!categorySampleImages.values.contains(_image))
+                  DropdownMenuItem(
+                    value: _image,
+                    child: const Text('Gambar saat ini'),
+                  ),
+                for (final entry in categorySampleImages.entries)
+                  DropdownMenuItem(
+                    value: entry.value,
+                    child: Text('Sampel kategori ${entry.key}'),
+                  ),
               ],
               onChanged: (v) => setState(() => _image = v!),
             ),

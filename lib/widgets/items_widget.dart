@@ -5,6 +5,7 @@ import '../models/product.dart';
 import '../providers/product_provider.dart';
 import '../providers/wishlist_provider.dart';
 import '../utils/format.dart';
+import '../utils/product_image.dart';
 
 class ProductCard extends StatelessWidget {
   const ProductCard({super.key, required this.product});
@@ -32,14 +33,10 @@ class ProductCard extends StatelessWidget {
               children: [
                 AspectRatio(
                   aspectRatio: 1,
-                  child: Image.asset(
-                    product.image,
+                  child: ProductImage(
+                    src: product.image,
                     fit: BoxFit.cover,
-                    errorBuilder: (_, __, ___) => Container(
-                      color: const Color(0xFF0D9488).withValues(alpha: 0.08),
-                      child: const Icon(Icons.image_outlined,
-                          size: 48, color: Color(0xFF0D9488)),
-                    ),
+                    errorIconSize: 48,
                   ),
                 ),
                 if (product.discountPercent > 0)
@@ -266,15 +263,11 @@ class _FlashSaleItem extends StatelessWidget {
                   width: double.infinity,
                   height: 110,
                   color: Colors.white,
-                  child: Image.asset(
-                    product.image,
-                    fit: BoxFit.cover,
-                    errorBuilder: (_, __, ___) => const Icon(
-                      Icons.image_outlined,
-                      size: 40,
-                      color: Color(0xFF0D9488),
-                    ),
-                  ),
+                   child: ProductImage(
+                     src: product.image,
+                     fit: BoxFit.cover,
+                     errorIconSize: 40,
+                   ),
                 ),
                 if (product.discountPercent > 0)
                   Positioned(
